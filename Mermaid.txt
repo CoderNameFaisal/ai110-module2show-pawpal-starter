@@ -1,0 +1,43 @@
+classDiagram
+    direction LR
+
+    class Owner {
+      name: String
+      availableMinutesPerDay: int
+      preferences: String
+      addPet(pet: Pet): void
+      setAvailability(minutes: int): void
+      setPreferences(preferences: String): void
+    }
+
+    class Pet {
+      name: String
+      species: String
+      age: int
+      addTask(task: CareTask): void
+      removeTask(taskTitle: String): void
+      getTasks(): List~CareTask~
+    }
+
+    class CareTask {
+      title: String
+      durationMinutes: int
+      priority: String
+      recurrence: String
+      isCompleted: bool
+      markComplete(): void
+      isDueToday(): bool
+    }
+
+    class Scheduler {
+      generateDailyPlan(owner: Owner, pet: Pet): List~CareTask~
+      sortTasks(tasks: List~CareTask~): List~CareTask~
+      filterByAvailableTime(tasks: List~CareTask~, minutes: int): List~CareTask~
+      explainPlan(plan: List~CareTask~): String
+    }
+
+    Owner "1" o-- "1..*" Pet : has
+    Pet "1" *-- "0..*" CareTask : includes
+    Scheduler ..> Owner : uses constraints
+    Scheduler ..> Pet : reads tasks
+    Scheduler ..> CareTask : schedules

@@ -5,7 +5,14 @@
 **a. Initial design**
 
 - Briefly describe your initial UML design.
+A: My initial UML design focused on a simple domain model with clear responsibilities and relationships. I modeled one owner who can manage one or many pets (one-to-many), and each pet can have zero or many care tasks (one-to-many). The scheduler is a service-style class that reads owner constraints and pet tasks, then generates an ordered daily plan based on priority and available time. I kept the design intentionally lightweight so the core scheduling logic stayed easy to test and explain.
+
 - What classes did you include, and what responsibilities did you assign to each?
+A: I included four main classes in my initial design:
+   - `Owner`: stores owner profile details and preferences, such as available time and care priorities.
+   - `Pet`: stores pet details (name, species, basic needs) and links the pet to its care tasks.
+   - `CareTask`: represents one care activity with fields like title, duration, priority, and optional recurrence settings.
+   - `Scheduler`: takes the task list and constraints, sorts/selects tasks for the day, and returns the final ordered plan with brief reasoning.
 
 **b. Design changes**
 
