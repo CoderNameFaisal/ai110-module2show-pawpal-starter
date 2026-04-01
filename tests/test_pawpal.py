@@ -168,3 +168,35 @@ def test_mark_task_complete_creates_next_weekly_instance() -> None:
     assert next_task.start_date == today + timedelta(days=7)
     assert next_task.is_completed is False
     assert len(pet.tasks) == 2
+
+
+def test_generate_daily_plan_returns_empty_for_pet_with_no_tasks() -> None:
+    scheduler = Scheduler()
+    owner = Owner(name="Jordan", available_minutes_per_day=60)
+    owner.add_pet(Pet(name="Mochi", species="dog", age=3))
+
+    plan = scheduler.generate_daily_plan(owner)
+
+    assert plan == []
+
+
+def test_detect_conflicts_flags_tasks_with_exact_same_start_time() -> None:
+    scheduler = Scheduler()
+    first = CareTask(
+        title="Breakfast",
+        duration_minutes=20,
+        priority="high",
+        start_time=time(8, 0),
+    )
+    second = CareTask(
+        title="Medication",
+        duration_minutes=10,
+        priority="high",
+        start_time=time(8, 0),
+    )
+
+    conflicts = scheduler.detect_conflicts([first, second])
+
+    assert len(conflicts) == 1
+    assert conflicts[0][0].title == "Breakfast"
+    assert conflicts[0][1].title == "Medication"
